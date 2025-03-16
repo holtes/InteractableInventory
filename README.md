@@ -19,3 +19,6 @@
 - Объекты имеют общий базовый класс `InventoryObjController` (реализует основные функции взаимодействия с инвентарем).
 - Данные по объектам хранятся и настраиваются через `ScriptableObject` объекта `InventoryObject`.
 - Созраненные данные сцены хранятся по пути `Application.persistentDataPath\имя файла настраиваемого на объекте GameManager`.
+
+## Ссылка на проект
+https://psyonik.itch.io/inventorytestwork
