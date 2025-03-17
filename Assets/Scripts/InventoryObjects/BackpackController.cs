@@ -65,8 +65,8 @@ public class BackpackController : MonoBehaviour
         attachedObj.MoveToTarget(_pointToDeattach.position, attachedObj.transform.rotation,
             _magnetObjDuration, delegate { attachedObj.SetObjectPhysicState(true); });
         attachedObj.IsPinnedToBag = false;
-        GameManager.OnChangeObjState?.Invoke(attachedObj.Id, WebService.ActionType.Deattached);
         _attachedObjects.Remove(objType);
+        GameManager.OnChangeObjState?.Invoke(attachedObj.Id, WebService.ActionType.Deattached);
     }
 
     //Мгновенная установка и прикрепление объекта к рюкзаку

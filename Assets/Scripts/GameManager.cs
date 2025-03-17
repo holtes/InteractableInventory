@@ -4,6 +4,7 @@ using UnityEngine;
 using SimpleJSON;
 using System.Linq;
 using System;
+using System.Runtime.InteropServices;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,14 +16,21 @@ public class GameManager : MonoBehaviour
     
     private List<InventoryObjController> _inventoryObjects;
 
+    [DllImport("__Internal")]
+    private static extern void RegisterBeforeUnload();
+
     //Запуск сцены
     private void Start()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        RegisterBeforeUnload();
+#endif
         _inventoryObjects = FindObjectsOfType<InventoryObjController>().ToList();
         JSONArray savedData = _saveService.ReadDataFromSaveFile();
         LoadGame(savedData);
 
         OnChangeObjState += _webService.SendPostRequest;
+        OnChangeObjState += (int id, WebService.ActionType actionType) => SaveData();
     }
 
     //Загрузка предыдущей сессии
@@ -35,6 +43,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Сохранение сессии при выходе из игры
-    private void OnDestroy() => _saveService.SaveData(_backpack.AttachedObjects);
+    // Сохранение сессии при выходе из игры
+    private void OnDestroy() => SaveData();
+
+    // Метод для сохранения данных перед закрытием страницы
+    public void SaveDataBeforeUnload()
+    {
+        SaveData();
+    }
+
+    // Общий метод для сохранения данных
+    private void SaveData()
+    {
+        _saveService.SaveData(_backpack.AttachedObjects);
+    }
 }
